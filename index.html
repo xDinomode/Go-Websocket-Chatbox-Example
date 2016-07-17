@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+    <input type="text" placeholder="message" id="textbox">
+    <button id="button">Send</button>
+    <div id="box"></div>
+
+    <script>
+        var socket = new WebSocket("ws://localhost:8080/ws");
+
+        var button = document.getElementById("button");
+        button.addEventListener("click", function(event){
+            var text = document.getElementById("textbox").value;        
+            socket.send(text);
+        });
+
+        socket.onopen = function(event){
+            console.log("Socket opened successfully");
+        }
+
+        socket.onmessage = function(event){
+            var box = document.createElement("div");
+            box.innerHTML = event.data;
+            document.getElementById("box").appendChild(box);
+        }
+        
+        window.onbeforeunload = function(event){
+            socket.close();
+        }
+    </script>
+</body>
+</html>
+
